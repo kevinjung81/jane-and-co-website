@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Trash2, Download, Upload, Calendar, Hash } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Plus, Trash2, Download, Upload } from 'lucide-react';
+import html2pdf from 'html2pdf.js'; // <-- 1. Safely import the installed library here
 
 const InvoiceGenerator = () => {
   // State for Invoice Data
   const [invoiceNumber, setInvoiceNumber] = useState('2026-1');
   const [date, setDate] = useState('2026-02-06');
-  const [logo, setLogo] = useState(null);
-  const [taxRate, setTaxRate] = useState(0); // Defaulting to 0 based on example, but editable
+  const [logo, setLogo] = useState<string | null>(null);
+  const [taxRate, setTaxRate] = useState(0); 
   
-  // Sender Info (Jane & Company)
+  // Sender Info
   const [senderInfo, setSenderInfo] = useState({
     name: 'JANE & COMPANY',
     address: '2836 Breezy Point Ln, Frisco TX 75034',
@@ -16,14 +17,14 @@ const InvoiceGenerator = () => {
     email: ''
   });
 
-  // Client Info (From Prompt)
+  // Client Info
   const [clientInfo, setClientInfo] = useState({
     name: 'LEX CELL-TX LLC, DBA INTAC SOLUTION',
     addressLine1: '5550 Granite Parkway, Suite 295',
     addressLine2: 'Plano, TX 75024'
   });
 
-  // Bank Info (From Prompt)
+  // Bank Info
   const [bankInfo, setBankInfo] = useState({
     bankName: 'Chase',
     accountName: 'Jane & Company',
@@ -31,28 +32,19 @@ const InvoiceGenerator = () => {
     routingNumber: '111000614'
   });
 
-  // Line Items (From Prompt)
+  // Line Items
   const [items, setItems] = useState([
     { id: 1, description: 'HR Project Consulting', quantity: 1, price: 4000.00 },
     { id: 2, description: 'Business Advisory', quantity: 1, price: 2300.00 },
   ]);
 
   const [isGenerating, setIsGenerating] = useState(false);
-  const invoiceRef = useRef(null);
+  const invoiceRef = useRef<HTMLDivElement>(null);
 
-  // Load html2pdf script
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+  // <-- 2. Removed the messy "useEffect" script injector entirely!
 
   // Handle Logo Upload
-  const handleLogoChange = (e) => {
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setLogo(URL.createObjectURL(e.target.files[0]));
     }
@@ -64,7 +56,7 @@ const InvoiceGenerator = () => {
   const grandTotal = subtotal + taxAmount;
 
   // Handlers
-  const handleItemChange = (id, field, value) => {
+  const handleItemChange = (id: number, field: string, value: any) => {
     setItems(items.map(item => 
       item.id === id ? { ...item, [field]: value } : item
     ));
@@ -74,39 +66,45 @@ const InvoiceGenerator = () => {
     setItems([...items, { id: Date.now(), description: 'New Service', quantity: 1, price: 0 }]);
   };
 
-  const removeItem = (id) => {
+  const removeItem = (id: number) => {
     setItems(items.filter(item => item.id !== id));
   };
 
+  // 3. Updated the download logic to use the safe local package
   const handleDownloadPDF = () => {
-    if (!window.html2pdf) {
-      alert('PDF Generator is still loading, please try again in a moment.');
-      return;
-    }
-
     setIsGenerating(true);
     const element = invoiceRef.current;
     
+    if (!element) {
+      setIsGenerating(false);
+      return;
+    }
+
     // Select elements to hide during PDF generation
-    const elementsToHide = element.querySelectorAll('.no-print');
+    const elementsToHide = element.querySelectorAll<HTMLElement>('.no-print');
     elementsToHide.forEach(el => el.style.display = 'none');
 
     const opt = {
-      margin: [0.5, 0.5, 0.5, 0.5], // Top, Left, Bottom, Right (inches)
+      margin: [0.5, 0.5, 0.5, 0.5],
       filename: `Invoice_${invoiceNumber}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, logging: false },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
 
-    window.html2pdf().set(opt).from(element).save().then(() => {
-      // Restore hidden elements
+    // 4. Using the imported package and added a fail-safe catch block
+    html2pdf().set(opt).from(element).save().then(() => {
       elementsToHide.forEach(el => el.style.display = '');
       setIsGenerating(false);
+    }).catch((err: any) => {
+      console.error("PDF generation error:", err);
+      elementsToHide.forEach(el => el.style.display = '');
+      setIsGenerating(false);
+      alert("There was an issue generating the PDF. Please try again.");
     });
   };
 
-  const formatCurrency = (amount) => {
+  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
   };
 
@@ -119,7 +117,7 @@ const InvoiceGenerator = () => {
         <button 
           onClick={handleDownloadPDF}
           disabled={isGenerating}
-          className="flex items-center gap-2 bg-[#0ABAB5] hover:bg-[#089a96] text-white px-6 py-2 rounded-md font-medium transition-colors shadow-sm"
+          className={`flex items-center gap-2 text-white px-6 py-2 rounded-md font-medium transition-colors shadow-sm ${isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0ABAB5] hover:bg-[#089a96]'}`}
         >
           <Download size={18} />
           {isGenerating ? 'Generating...' : 'Download PDF'}
@@ -158,9 +156,6 @@ const InvoiceGenerator = () => {
                 </label>
               )}
             </div>
-            
-            {/* Sender Name (Usually handled by Logo, but editable here just in case) */}
-             {/* Not explicitly shown in visual prompt as text if logo is there, but good to have fallback */}
           </div>
 
           {/* Invoice Label & Meta */}
