@@ -3,12 +3,7 @@ import Logo from './Logo';
 import { useAuth } from '../context/AuthContext';
 import { Menu, X, Search, User as UserIcon, LogOut } from 'lucide-react';
 
-// 1. Tell TypeScript that Navbar now accepts a 'setPage' function
-interface NavbarProps {
-  setPage: (page: string) => void;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ setPage }) => {
+const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, signInWithGoogle, logout } = useAuth();
@@ -21,27 +16,13 @@ const Navbar: React.FC<NavbarProps> = ({ setPage }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 2. Added Invoice between Careers and About Us, and tagged where they lead
   const navLinks = [
-    { name: 'Capabilities', href: '#capabilities', targetPage: 'home' },
-    { name: 'Industries', href: '#industries', targetPage: 'home' },
-    { name: 'Insights', href: '#insights', targetPage: 'home' },
-    { name: 'Careers', href: '#careers', targetPage: 'home' },
-    { name: 'Invoice', href: '#invoice', targetPage: 'invoice' }, // New Invoice Link
-    { name: 'About Us', href: '#about', targetPage: 'home' },
+    { name: 'Capabilities', href: '#capabilities' },
+    { name: 'Industries', href: '#industries' },
+    { name: 'Insights', href: '#insights' },
+    { name: 'Careers', href: '#careers' },
+    { name: 'About Us', href: '#about' },
   ];
-
-  // 3. Smart click handler to swap pages or scroll to sections
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, link: { targetPage: string; href: string }) => {
-    if (link.targetPage === 'invoice') {
-      e.preventDefault(); // Stop URL from changing
-      setPage('invoice'); // Switch to Invoice component
-      window.scrollTo(0, 0); // Scroll to top
-    } else {
-      setPage('home'); // Ensure we are on the home page for anchor links to work
-    }
-    setIsMobileMenuOpen(false); // Close mobile menu if it was open
-  };
 
   return (
     <nav
@@ -52,12 +33,7 @@ const Navbar: React.FC<NavbarProps> = ({ setPage }) => {
       }`}
     >
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12 flex items-center justify-between">
-        
-        {/* 4. Make the Logo click return the user to the Home page */}
-        <div 
-          className="flex items-center cursor-pointer" 
-          onClick={() => { setPage('home'); window.scrollTo(0, 0); }}
-        >
+        <div className="flex items-center">
           <Logo />
         </div>
 
@@ -68,7 +44,6 @@ const Navbar: React.FC<NavbarProps> = ({ setPage }) => {
               <a
                 key={link.name}
                 href={link.href}
-                onClick={(e) => handleNavClick(e, link)}
                 className="relative group py-2 hover:text-brand-teal transition-colors"
               >
                 {link.name}
@@ -134,7 +109,7 @@ const Navbar: React.FC<NavbarProps> = ({ setPage }) => {
               key={link.name}
               href={link.href}
               className="text-lg font-serif font-medium text-brand-charcoal border-b border-gray-100 pb-2"
-              onClick={(e) => handleNavClick(e, link)}
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               {link.name}
             </a>
