@@ -94,6 +94,7 @@ const InvoiceGenerator = () => {
       {/* Invoice Paper (8.5 x 11 inches) */}
       <div 
         ref={invoiceRef}
+        id="invoice-paper"
         className="mx-auto bg-white shadow-lg relative text-gray-800"
         style={{ 
           width: '8.5in', 

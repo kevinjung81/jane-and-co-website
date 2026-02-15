@@ -8,7 +8,40 @@
 }
 
 @media print {
-  nav { display: none !important; }
-  .no-print { display: none !important; }
-  @page { margin: 0.5in; }
+  /* 1. Hide every single thing on the page by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* 2. Only show the invoice and its contents */
+  #invoice-paper, #invoice-paper * {
+    visibility: visible;
+  }
+
+  /* 3. Position the invoice at the very top-left of the printed page */
+  #invoice-paper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0.5in !important;
+    box-shadow: none !important;
+  }
+
+  /* 4. Force the browser to ignore the website's background colors and use the print colors */
+  body {
+    background: none !important;
+  }
+
+  /* 5. Hide the specific interactive elements like 'Add Item' or 'Trash' icons */
+  .no-print {
+    display: none !important;
+  }
+
+  /* 6. Set the page size to standard Letter */
+  @page {
+    size: letter;
+    margin: 0;
+  }
 }
