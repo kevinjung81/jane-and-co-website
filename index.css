@@ -6,3 +6,9 @@
   --color-brand-teal: #14b8a6;
   --color-brand-dark: #08252B; /* Updated to the authentic deep teal-navy */
 }
+
+@media print {
+  nav { display: none !important; }
+  .no-print { display: none !important; }
+  @page { margin: 0.5in; }
+}

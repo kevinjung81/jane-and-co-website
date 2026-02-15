@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Plus, Trash2, Download, Upload } from 'lucide-react';
-import html2pdf from 'html2pdf.js'; // <-- 1. Safely import the installed library here
+//import html2pdf from 'html2pdf.js'; // <-- 1. Safely import the installed library here
 
 const InvoiceGenerator = () => {
   // State for Invoice Data
@@ -55,12 +55,12 @@ const InvoiceGenerator = () => {
   const taxAmount = subtotal * (taxRate / 100);
   const grandTotal = subtotal + taxAmount;
 
-  // Handlers
-  const handleItemChange = (id: number, field: string, value: any) => {
-    setItems(items.map(item => 
-      item.id === id ? { ...item, [field]: value } : item
-    ));
-  };
+  // // Handlers
+  // const handleItemChange = (id: number, field: string, value: any) => {
+  //   setItems(items.map(item => 
+  //     item.id === id ? { ...item, [field]: value } : item
+  //   ));
+  // };
 
   const addItem = () => {
     setItems([...items, { id: Date.now(), description: 'New Service', quantity: 1, price: 0 }]);
