@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { Plus, Trash2, Download, Upload } from 'lucide-react';
-//import html2pdf from 'html2pdf.js'; // <-- 1. Safely import the installed library here
 
 const InvoiceGenerator = () => {
   // State for Invoice Data
@@ -38,10 +37,7 @@ const InvoiceGenerator = () => {
     { id: 2, description: 'Business Advisory', quantity: 1, price: 2300.00 },
   ]);
 
-  const [isGenerating, setIsGenerating] = useState(false);
   const invoiceRef = useRef<HTMLDivElement>(null);
-
-  // <-- 2. Removed the messy "useEffect" script injector entirely!
 
   // Handle Logo Upload
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,12 +51,12 @@ const InvoiceGenerator = () => {
   const taxAmount = subtotal * (taxRate / 100);
   const grandTotal = subtotal + taxAmount;
 
-  // // Handlers
-  // const handleItemChange = (id: number, field: string, value: any) => {
-  //   setItems(items.map(item => 
-  //     item.id === id ? { ...item, [field]: value } : item
-  //   ));
-  // };
+  // Handlers (Fixed: Uncommented so you can edit items!)
+  const handleItemChange = (id: number, field: string, value: any) => {
+    setItems(items.map(item => 
+      item.id === id ? { ...item, [field]: value } : item
+    ));
+  };
 
   const addItem = () => {
     setItems([...items, { id: Date.now(), description: 'New Service', quantity: 1, price: 0 }]);
@@ -70,38 +66,9 @@ const InvoiceGenerator = () => {
     setItems(items.filter(item => item.id !== id));
   };
 
-  // 3. Updated the download logic to use the safe local package
+  // The Native Print Logic
   const handleDownloadPDF = () => {
-    setIsGenerating(true);
-    const element = invoiceRef.current;
-    
-    if (!element) {
-      setIsGenerating(false);
-      return;
-    }
-
-    // Select elements to hide during PDF generation
-    const elementsToHide = element.querySelectorAll<HTMLElement>('.no-print');
-    elementsToHide.forEach(el => el.style.display = 'none');
-
-    const opt = {
-      margin: [0.5, 0.5, 0.5, 0.5],
-      filename: `Invoice_${invoiceNumber}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-
-    // 4. Using the imported package and added a fail-safe catch block
-    html2pdf().set(opt).from(element).save().then(() => {
-      elementsToHide.forEach(el => el.style.display = '');
-      setIsGenerating(false);
-    }).catch((err: any) => {
-      console.error("PDF generation error:", err);
-      elementsToHide.forEach(el => el.style.display = '');
-      setIsGenerating(false);
-      alert("There was an issue generating the PDF. Please try again.");
-    });
+    window.print();
   };
 
   const formatCurrency = (amount: number) => {
@@ -114,13 +81,13 @@ const InvoiceGenerator = () => {
       {/* Control Bar */}
       <div className="max-w-[8.5in] mx-auto mb-6 flex justify-between items-center bg-white p-4 rounded-lg shadow-sm">
         <h1 className="text-xl font-bold text-gray-700">Invoice Editor</h1>
+        {/* Fixed: Simplified button without the broken 'isGenerating' logic */}
         <button 
           onClick={handleDownloadPDF}
-          disabled={isGenerating}
-          className={`flex items-center gap-2 text-white px-6 py-2 rounded-md font-medium transition-colors shadow-sm ${isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0ABAB5] hover:bg-[#089a96]'}`}
+          className="flex items-center gap-2 bg-[#0ABAB5] hover:bg-[#089a96] text-white px-6 py-2 rounded-md font-medium transition-colors shadow-sm"
         >
           <Download size={18} />
-          {isGenerating ? 'Generating...' : 'Download PDF'}
+          Download PDF
         </button>
       </div>
 
