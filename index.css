@@ -44,4 +44,22 @@
     size: letter;
     margin: 0;
   }
+
+/* NEW: Forces the document to end after the first page */
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* NEW: Prevents any element from creating a new page */
+  #invoice-paper {
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+  }
+
+  /* NEW: Specifically targets and hides that blank 2nd page */
+  div:empty {
+    display: none !important;
+  }
+
 }
