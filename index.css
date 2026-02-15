@@ -2,6 +2,7 @@
 @config "./tailwind.config.js";
 
 @theme {
-  --color-brand-charcoal: #1f2937; /* The dark text color */
-  --color-brand-teal: #14b8a6;     /* The Jane & Co. Teal */
+  --color-brand-charcoal: #1f2937;
+  --color-brand-teal: #14b8a6;
+  --color-brand-dark: #0f172a; /* The dark overlay color for the Hero section */
 }
