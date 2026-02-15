@@ -111,7 +111,7 @@ const InvoiceGenerator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8 font-sans">
+    <div className="min-h-screen bg-gray-100 px-4 pb-4 pt-28 md:px-8 md:pb-8 md:pt-32 font-sans">
       
       {/* Control Bar */}
       <div className="max-w-[8.5in] mx-auto mb-6 flex justify-between items-center bg-white p-4 rounded-lg shadow-sm">
