@@ -4,12 +4,13 @@ import Hero from './components/Hero';
 import FeaturedInsights from './components/FeaturedInsights';
 import Capabilities from './components/Capabilities';
 import Footer from './components/Footer';
-import InvoiceGenerator from './components/InvoiceGenerator'; // <-- Import the new component
+import InvoiceGenerator from './components/InvoiceGenerator';
+import SignIn from './components/SignIn'; // Import the new Sign In component
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 const AppContent: React.FC = () => {
-  const { error } = useAuth();
-  const [currentPage, setCurrentPage] = useState('home'); // <-- This tracks what page we are on
+  const { user, error } = useAuth(); // Monitor the user's login status
+  const [currentPage, setCurrentPage] = useState('home');
 
   return (
     <div className="font-sans text-brand-charcoal bg-white min-h-screen flex flex-col">
@@ -20,11 +21,9 @@ const AppContent: React.FC = () => {
         </div>
       )}
       
-      {/* Pass the page changer to the Navbar */}
       <Navbar setPage={setCurrentPage} /> 
       
       <main className="flex-grow">
-        {/* Safely swap the content based on the menu clicked */}
         {currentPage === 'home' ? (
           <>
             <Hero />
@@ -32,7 +31,14 @@ const AppContent: React.FC = () => {
             <Capabilities />
           </>
         ) : (
-          <InvoiceGenerator />
+          /* LOGIC: If they click 'Invoice' but aren't logged in, 
+             show the SignIn gate. Once they log in, show the generator.
+          */
+          user ? (
+            <InvoiceGenerator />
+          ) : (
+            <SignIn onSuccess={() => setCurrentPage('invoice')} />
+          )
         )}
       </main>
       <Footer />
