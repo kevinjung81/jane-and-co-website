@@ -5,7 +5,7 @@ import { Insight } from '../types';
 const insights: Insight[] = [
   {
     id: '1',
-    title: 'The Future of Qlik Integration in HR Analytics',
+    title: 'The Future of Agentic AI in Talent Sourcing and Recruitment',
     category: 'Data Strategy',
     imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop',
     link: '#',

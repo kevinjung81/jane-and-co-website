@@ -1,0 +1,28 @@
+1. The "Testing" Workflow (Instant)
+When you are actively changing text, swapping images, or trying out new colors, you do not need to build or push to GitHub.
+
+Just run this command in your terminal:
+
+PowerShell
+npm run dev
+This starts a local, private server on your computer. Every time you hit "Save" in your code, the browser will instantly update in milliseconds. You can use this to perfect the site before anyone else sees it.
+
+2. The "Live Deployment" Workflow
+Once you love how the site looks on your local server and you want the rest of the world to see it at thejaneandco.com, you will run the standard three-step deployment:
+
+Step 1: Compile the Code
+
+PowerShell
+npm run build
+(This tells Vite to translate all your React and Tailwind code into the highly-optimized files the browser needs).
+
+Step 2: Send it to the Server
+
+PowerShell
+git add .
+git commit -m "Describe what you changed"
+git push origin main
+(This sends the finished files to GitHub, which automatically updates your live website).
+
+Step 3: Wait & Refresh
+Wait 60 seconds, then go to your live site and press Ctrl + F5.
