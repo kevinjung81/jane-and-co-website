@@ -6,9 +6,9 @@ const Hero: React.FC = () => {
     <section className="relative w-full h-[90vh] min-h-[600px] flex items-center overflow-hidden bg-brand-dark">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
-        <img 
-          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" 
-          alt="Modern Corporate Architecture" 
+        <img
+          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
+          alt="Modern Corporate Architecture"
           className="w-full h-full object-cover opacity-40"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/80 to-transparent"></div>
@@ -21,11 +21,11 @@ const Hero: React.FC = () => {
               Premier HR & Data Consulting
             </span>
           </div>
-          
+
           <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.1] text-white font-medium mb-8">
-            Transforming U.S. Enterprises Through <span className="text-brand-teal italic">Advanced Data & AI.</span>
+            Transforming Talent Sourcing and Recruitment Through <span className="text-brand-teal italic">Advanced Data & AI.</span>
           </h1>
-          
+
           <p className="font-sans text-lg md:text-xl text-gray-300 font-light max-w-2xl mb-12 leading-relaxed">
             We partner with leaders to unlock actionable insights, optimizing workforce potential and driving sustainable value in a complex digital landscape.
           </p>
